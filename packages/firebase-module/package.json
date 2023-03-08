@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtjs/firebase",
+  "name": "@giterman/nuxt-firebase",
   "version": "8.2.2",
   "description": "Intergrate Firebase into your Nuxt project.",
   "keywords": [
