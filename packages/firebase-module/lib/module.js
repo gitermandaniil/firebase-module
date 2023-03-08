@@ -6,14 +6,19 @@ const templateUtils = require('./utils/template-utils')
 const r = (...path) => resolve(__dirname, ...path)
 
 module.exports = function (moduleOptions) {
+  const { nuxt } = this
   const defaultOptions = {
     injectModule: true,
   }
 
+  const runtimeConfig = nuxt.options.publicRuntimeConfig && nuxt.options.publicRuntimeConfig.firebase || {}
   const options = Object.assign(
     defaultOptions,
     this.options.firebase,
-    moduleOptions
+    moduleOptions,
+    {
+      config: runtimeConfig
+    }
   )
   const currentEnv = getCurrentEnv(options)
 

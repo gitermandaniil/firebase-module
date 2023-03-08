@@ -11,6 +11,8 @@ for (const service of enabledServices) { %>
 const appConfig = <%= serialize(options.config) %>
 
 export default async (ctx, inject) => {
+  const runtimeConfig = ctx.$config && ctx.$config.firebase || {}
+  Object.assign(appConfig, runtimeConfig)
 
   <%/****************************************
   **************** LAZY MODE **************
@@ -104,7 +106,7 @@ export default async (ctx, inject) => {
     servicePromises = [
       <%= serverServices.reduce((acc, service) => `${acc}${service.id}Service(session, firebase, ctx, inject),\n    `, '') %>
     ]
-  } 
+  }
   <% } %>
 
   <% if (clientServices.length) { %>
@@ -118,7 +120,7 @@ export default async (ctx, inject) => {
   const [
     <%= enabledServices.map(service => service.id).join(',\n    ') %>
   ] = await Promise.all(servicePromises)
-  
+
   const fire = {
     <%= enabledServices.map(service => `${service.id}: ${service.id}`).join(',\n    ') %>
   }
@@ -147,7 +149,7 @@ Fixes https://github.com/nuxt-community/firebase-module/issues/366
 function forceInject (ctx, inject, key, value) {
   inject(key, value)
   const injectKey = '$' + key
-  ctx[injectKey] = value 
+  ctx[injectKey] = value
   if (typeof window !== "undefined" && window.<%= globals.nuxt %>) {
   // If clause makes sure it's only run when ready() is called in a component, not in a plugin.
     window.<%= globals.nuxt %>.$options[injectKey] = value
